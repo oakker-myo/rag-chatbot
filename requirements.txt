@@ -1,0 +1,11 @@
+python-dotenv
+psycopg2-binary
+pypdf 
+python-docx
+qdrant-client 
+sentence-transformers
+torch
+numpy
+flask
+flask_socketio
+google-genai

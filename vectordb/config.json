@@ -1,0 +1,9 @@
+{
+  "qdrant_host": "localhost",
+  "qdrant_port": 6333,
+  "collection_name": "my_documents",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "default_documents_folder": "./documents",
+  "chunk_size": 1000,
+  "chunk_overlap": 200
+}

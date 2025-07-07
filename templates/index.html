@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+         <div class="brand">
+            <svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.0001 2.00002C13.0478 2.00002 14.0531 2.26123 14.9231 2.75333L15.2443 2.94313L16.2743 4.78913L16.4802 5.16335C17.446 6.76134 18.0001 8.59134 18.0001 10.5C18.0001 14.6421 14.6422 18 10.5001 18C9.5583 18 8.65629 17.8423 7.82297 17.553L7.51867 17.447L5.51868 16.447L5.27572 16.3255C3.73815 15.544 2.5441 14.262 1.87519 12.7469L1.75842 12.4795L2.00007 10.5187L2.08365 9.7153C2.55136 7.00392 3.82912 4.6363 5.69672 2.7687L5.8638 2.60163L6.09658 2.36885C6.94684 1.51859 8.01815 1 9.16815 1C10.2232 1 11.1892 1.37976 11.9162 2.049L12.0001 2.12142V2.00002ZM8.00007 19C8.93247 19.5865 10.016 19.9324 11.1682 20H11.5C16.1944 20 20.0001 16.1944 20.0001 11.5C20.0001 9.38914 19.3802 7.42398 18.3391 5.80376L18.2589 5.67491L17.2289 3.82891L16.9531 3.37628C16.9222 3.32761 16.8913 3.27894 16.8604 3.23028L16.7423 3.0368C15.8273 2.5036 14.7773 2.19313 13.6843 2.19313C12.9849 2.19313 12.3019 2.30252 11.6663 2.50803L11.5 2.5601L9.5 3.5601L9.27572 3.67453C7.43859 4.60331 6.03814 6.07519 5.21634 7.8542L5.08365 8.15174L4.83654 10.2847L4.75842 11.0205C4.26186 13.9848 5.69145 16.828 8.16912 18.2589L8.41618 18.3984L10.4162 19.3984L10.5838 19.4815C10.9162 19.6202 11.2847 19.7153 11.6663 19.7847L12.0001 19.8338V19.9324C10.9162 20.3598 9.66815 20.5 8.33339 20.5C6.46962 20.5 4.75842 19.9815 3.33339 19L8.00007 19Z"></path></svg>
+            <span class="brand-name">AI Chatbot</span>
+        </div>
+        <div class="header-buttons">
+            <button id="restart-button" title="New Chat">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#87CEEB" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div id="welcome-message">
+                <h1>{{ welcome_message[0] }}</h1>
+                <p>{{ welcome_message[1] }}</p>
+
+                <div class="top-questions-container">
+                    <div class="question-box" role="button" tabindex="0">
+                        <p title="What can you do?">What can you do?</p>
+                    </div>
+                    <div class="question-box" role="button" tabindex="0">
+                        <p title="Tell me about your brand">Tell me about your brand</p>
+                    </div>
+                    <div class="question-box" role="button" tabindex="0">
+                        <p title="What products do you have?">What products do you have?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-container">
+                <div id="chat-messages" role="log" aria-live="polite"></div>
+                <div id="chat-form-container">
+                    <form id="chat-form">
+                        <input type="text" id="chat-input" aria-label="Type your message" placeholder="Type your message..." autocomplete="off">
+                        <button id="send-button" type="submit" aria-label="Send message">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+    </main>
+    
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.min.js"></script>
+</body>
+</html>

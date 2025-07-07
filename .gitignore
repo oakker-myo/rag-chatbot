@@ -1,0 +1,13 @@
+# .env files
+.env
+.flaskenv
+
+# virtual environments
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*~
